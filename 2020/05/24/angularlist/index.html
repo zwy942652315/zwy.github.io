@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>基于列表类开发的列表组件 | wenyan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#2ca6cb">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="主要实现的功能​    排序、分页、过滤、自定义操作列、列表中根据数据展示相应图标、跳转详情页     ​     组件继承思想​    封装一个列表基类，派生类继承该类，复用基类的功能。 Constructor 构造函数​    如果派生类未声明构造函数，它将使用基类的构造函数。这意味着在基类构造函数注入的所有服务，子组件都能访问到。 生命周期方法不继承​    如果基类中包含生命周期钩子，如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于列表类开发的列表组件">
+<meta property="og:url" content="http://yoursite.com/2020/05/24/angularlist/index.html">
+<meta property="og:site_name" content="wenyan">
+<meta property="og:description" content="主要实现的功能​    排序、分页、过滤、自定义操作列、列表中根据数据展示相应图标、跳转详情页     ​     组件继承思想​    封装一个列表基类，派生类继承该类，复用基类的功能。 Constructor 构造函数​    如果派生类未声明构造函数，它将使用基类的构造函数。这意味着在基类构造函数注入的所有服务，子组件都能访问到。 生命周期方法不继承​    如果基类中包含生命周期钩子，如">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/.com//%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/%E5%8D%9A%E5%AE%A2%E6%96%87%E6%A1%A3/Application%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E8%BD%AC%E5%92%8C%E6%A8%A1%E5%9D%97%E5%85%B3%E7%B3%BB/img/%E5%88%97%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E4%BD%93%E7%B3%BB.png">
+<meta property="og:image" content="http://yoursite.com/.com//F:%5C%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%5C%E5%8D%9A%E5%AE%A2%E6%96%87%E6%A1%A3%5CApplication%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E8%BD%AC%E5%92%8C%E6%A8%A1%E5%9D%97%E5%85%B3%E7%B3%BB%5Cimg%5Cinput.png">
+<meta property="og:image" content="http://yoursite.com/.com//F:%5C%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%5C%E5%8D%9A%E5%AE%A2%E6%96%87%E6%A1%A3%5CApplication%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E8%BD%AC%E5%92%8C%E6%A8%A1%E5%9D%97%E5%85%B3%E7%B3%BB%5Cimg%5Csubscribe.png">
+<meta property="article:published_time" content="2020-05-24T07:40:10.896Z">
+<meta property="article:modified_time" content="2020-05-24T08:07:34.134Z">
+<meta property="article:author" content="wenyan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/.com//%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/%E5%8D%9A%E5%AE%A2%E6%96%87%E6%A1%A3/Application%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E8%BD%AC%E5%92%8C%E6%A8%A1%E5%9D%97%E5%85%B3%E7%B3%BB/img/%E5%88%97%E8%A1%A8%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E4%BD%93%E7%B3%BB.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="wenyan" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">wenyan</h5>
+          <a href="mailto:18319981182@163.com" title="18319981182@163.com" class="mail">18319981182@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zwy942652315" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">基于列表类开发的列表组件</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">基于列表类开发的列表组件</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-05-24T07:40:10.896Z" itemprop="datePublished" class="page-time">
+  2020-05-24
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#主要实现的功能"><span class="post-toc-number">1.</span> <span class="post-toc-text">主要实现的功能</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#组件继承思想"><span class="post-toc-number">2.</span> <span class="post-toc-text">组件继承思想</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Constructor-构造函数"><span class="post-toc-number">2.0.0.1.</span> <span class="post-toc-text">Constructor 构造函数</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#生命周期方法不继承"><span class="post-toc-number">2.0.0.2.</span> <span class="post-toc-text">生命周期方法不继承</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#继承的方法和属性基于可访问性级别"><span class="post-toc-number">2.0.0.3.</span> <span class="post-toc-text">继承的方法和属性基于可访问性级别</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#模板是不能被继承"><span class="post-toc-number">2.0.0.4.</span> <span class="post-toc-text">模板是不能被继承</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#元数据和装饰器不继承"><span class="post-toc-number">2.0.0.5.</span> <span class="post-toc-text">元数据和装饰器不继承</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#依赖注入"><span class="post-toc-number">2.0.0.6.</span> <span class="post-toc-text">依赖注入</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现过程"><span class="post-toc-number">3.</span> <span class="post-toc-text">实现过程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#组件定义"><span class="post-toc-number">3.0.1.</span> <span class="post-toc-text">组件定义</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#自定义模板"><span class="post-toc-number">3.0.1.1.</span> <span class="post-toc-text">自定义模板</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#继承父类"><span class="post-toc-number">3.0.1.2.</span> <span class="post-toc-text">继承父类</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#重写父类方法"><span class="post-toc-number">3.0.1.3.</span> <span class="post-toc-text">重写父类方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#组件使用"><span class="post-toc-number">3.0.2.</span> <span class="post-toc-text">组件使用</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#公共组件的巧妙之处"><span class="post-toc-number">4.</span> <span class="post-toc-text">公共组件的巧妙之处</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#actionColumn-操作列可以自定义"><span class="post-toc-number">4.0.0.1.</span> <span class="post-toc-text">actionColumn 操作列可以自定义</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#过滤功能"><span class="post-toc-number">4.0.0.2.</span> <span class="post-toc-text">过滤功能</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最后"><span class="post-toc-number">5.</span> <span class="post-toc-text">最后</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-angularList"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">基于列表类开发的列表组件</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-05-24 15:40:10" datetime="2020-05-24T07:40:10.896Z"  itemprop="datePublished">2020-05-24</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="主要实现的功能"><a href="#主要实现的功能" class="headerlink" title="主要实现的功能"></a>主要实现的功能</h2><p>​    排序、分页、过滤、自定义操作列、列表中根据数据展示相应图标、跳转详情页</p>
+  
+
+<p>​    </p>
+<h2 id="组件继承思想"><a href="#组件继承思想" class="headerlink" title="组件继承思想"></a>组件继承思想</h2><p>​    封装一个列表基类，派生类继承该类，复用基类的功能。</p>
+<h5 id="Constructor-构造函数"><a href="#Constructor-构造函数" class="headerlink" title="Constructor 构造函数"></a>Constructor 构造函数</h5><p>​    如果派生类未声明构造函数，它将使用基类的构造函数。这意味着在基类构造函数注入的所有服务，子组件都能访问到。</p>
+<h5 id="生命周期方法不继承"><a href="#生命周期方法不继承" class="headerlink" title="生命周期方法不继承"></a>生命周期方法不继承</h5><p>​    如果基类中包含生命周期钩子，如 <code>ngOnInit</code>、<code>ngOnChanges</code> 等，而在派生类没有定义相应的生命周期钩子，基类的生命周期钩子会被自动调用。如果需要在派生类触发<code>ngOnInit</code>，则需要在派生类上定义相应的生命周期钩子。</p>
+<h5 id="继承的方法和属性基于可访问性级别"><a href="#继承的方法和属性基于可访问性级别" class="headerlink" title="继承的方法和属性基于可访问性级别"></a>继承的方法和属性基于可访问性级别</h5><p>​    派生类不能访问私有方法和属性，仅继承公共方法和属性。</p>
+<h5 id="模板是不能被继承"><a href="#模板是不能被继承" class="headerlink" title="模板是不能被继承"></a>模板是不能被继承</h5><p>​    模板是不能被继承的 ，派生类需自定义模板，因此共享的 DOM 结构或行为需要单独处理。</p>
+<h5 id="元数据和装饰器不继承"><a href="#元数据和装饰器不继承" class="headerlink" title="元数据和装饰器不继承"></a>元数据和装饰器不继承</h5><p>装饰器和元数据（<code>@Component</code>，<code>@Directive</code>，<code>@NgModule</code>等），这些元数据和装饰器不会被派生类继承，但是有一个例外，<code>@Input</code>和<code>@Output</code>装饰器会传递给派生类</p>
+<h5 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h5><p>派生类必须通过调用super注入基类的参数</p>
+<h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2><p>application列表组件和基类<code>ResourceListBase</code>、<code>ResourceListWithStatuses</code> 关系</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/.com//技术文档\博客文档\Application功能模块的数据流转和模块关系\img\列表数据分析体系.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>application列表组件主要继承父类<code>ResourceListWithStatuses</code>，通过重写<code>ResourceListWithStatuses</code>的方法，自定义模板，来复用父类的功能属性。</p>
+<h4 id="组件定义"><a href="#组件定义" class="headerlink" title="组件定义"></a>组件定义</h4><h5 id="自定义模板"><a href="#自定义模板" class="headerlink" title="自定义模板"></a>自定义模板</h5><pre class=" language-ts"><code class="language-ts">@<span class="token function">Component</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  selector<span class="token punctuation">:</span> <span class="token string">'sym-application-list'</span><span class="token punctuation">,</span>
+  templateUrl<span class="token punctuation">:</span> <span class="token string">'./application.component.html'</span><span class="token punctuation">,</span>
+  changeDetection<span class="token punctuation">:</span> ChangeDetectionStrategy<span class="token punctuation">.</span>OnPush<span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre>
+<p>application.component.html</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>mat-elevation-z8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>table-lf<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>header-top<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h4</span><span class="token punctuation">></span></span>Application<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h4</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>table-content<span class="token punctuation">"</span></span> <span class="token attr-name">content</span> <span class="token attr-name">[hidden]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>showZeroState()<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>table-loading<span class="token punctuation">"</span></span> <span class="token attr-name">kdLoadingSpinner</span> <span class="token attr-name">[isLoading]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>isLoading<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-table</span> <span class="token attr-name">[dataSource]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>getData()<span class="token punctuation">"</span></span> <span class="token attr-name">matSort</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-container</span> <span class="token attr-name">matColumnDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>statusicon<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-header-cell</span> <span class="token attr-name">*matHeaderCellDef</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-header-cell</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-cell</span> <span class="token attr-name">*matCellDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let element; let index<span class="token punctuation">=</span>index<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-icon</span> <span class="token attr-name">[ngClass]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>getStatus(element).iconClass<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-container</span> <span class="token attr-name">*ngIf</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>showHoverIcon(index, element); else showStatus<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+              check_circle
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-container</span><span class="token punctuation">></span></span>
+
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-template</span> <span class="token attr-name">#showStatus</span><span class="token punctuation">></span></span>
+              {{getStatus(element).iconName}}
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-template</span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-icon</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-cell</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-container</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-container</span> <span class="token attr-name">matColumnDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-header-cell</span> <span class="token attr-name">*matHeaderCellDef</span> <span class="token attr-name">mat-sort-header</span><span class="token punctuation">></span></span>Name<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-header-cell</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-cell</span> <span class="token attr-name">*matCellDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let element<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>javascript:void(0);<span class="token punctuation">"</span></span>
+          <span class="token attr-name">(click)</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>goDetail(element)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            {{element.objectMeta.name}}
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-cell</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-container</span><span class="token punctuation">></span></span>
+
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-container</span> <span class="token attr-name">matColumnDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>namespace<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-header-cell</span> <span class="token attr-name">*matHeaderCellDef</span> <span class="token attr-name">mat-sort-header</span><span class="token punctuation">></span></span>Namespace<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-header-cell</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-cell</span> <span class="token attr-name">*matCellDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let element<span class="token punctuation">"</span></span><span class="token punctuation">></span></span> {{element.objectMeta.namespace}} <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-cell</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-container</span><span class="token punctuation">></span></span>
+
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-container</span> <span class="token attr-name">matColumnDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>labels<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-header-cell</span> <span class="token attr-name">*matHeaderCellDef</span><span class="token punctuation">></span></span>Labels<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-header-cell</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-cell</span> <span class="token attr-name">*matCellDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let element<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sym-labels-group</span> <span class="token attr-name">[value]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>element.objectMeta.labels<span class="token punctuation">'</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sym-labels-group</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-cell</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-container</span><span class="token punctuation">></span></span>
+
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-container</span> <span class="token attr-name">matColumnDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>replicas<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-header-cell</span> <span class="token attr-name">*matHeaderCellDef</span> <span class="token attr-name">mat-sort-header</span><span class="token punctuation">></span></span>Replicas<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-header-cell</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-cell</span> <span class="token attr-name">*matCellDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let element<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>javascript:void(0);<span class="token punctuation">"</span></span>
+            <span class="token attr-name">*ngIf</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>element.status &amp;&amp; element.status.replicas &amp;&amp; element.status.availableReplicas ;else other<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            {{element.status.availableReplicas}} / {{element.status.replicas}}
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-template</span> <span class="token attr-name">#other</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>javascript:void(0);<span class="token punctuation">"</span></span> <span class="token attr-name">*ngIf</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>element.status.replicas &amp;&amp; !element.status.availableReplicas<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+              <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>red<span class="token punctuation">'</span></span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span> / {{element.status.replicas}}
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>javascript:void(0);<span class="token punctuation">"</span></span> <span class="token attr-name">*ngIf</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>!element.status.replicas &amp;&amp; element.status.availableReplicas<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+              {{element.status.availableReplicas}} / <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>red<span class="token punctuation">'</span></span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>javascript:void(0);<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>red<span class="token punctuation">'</span></span>
+              <span class="token attr-name">*ngIf</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>!element.status.replicas &amp;&amp; !element.status.availableReplicas<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+              0 / 0
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-template</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-cell</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-container</span><span class="token punctuation">></span></span>
+
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-container</span> <span class="token attr-name">matColumnDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>creationTimestamp<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-header-cell</span> <span class="token attr-name">*matHeaderCellDef</span> <span class="token attr-name">mat-sort-header</span><span class="token punctuation">></span></span>Created Time <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-header-cell</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-cell</span> <span class="token attr-name">*matCellDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let element<span class="token punctuation">"</span></span><span class="token punctuation">></span></span> {{element.status.creationTimestamp}} <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-cell</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-container</span><span class="token punctuation">></span></span>
+
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ng-container</span> <span class="token attr-name">*ngFor</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let col of getActionColumns()<span class="token punctuation">"</span></span> <span class="token attr-name">[matColumnDef]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>col.name<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-header-cell</span> <span class="token attr-name">*matHeaderCellDef</span><span class="token punctuation">></span></span>Action<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-header-cell</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-cell</span> <span class="token attr-name">*matCellDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let element<span class="token punctuation">"</span></span><span class="token punctuation">></span></span> 
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>kd-dynamic-cell</span> <span class="token attr-name">[component]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>col.component<span class="token punctuation">"</span></span> <span class="token attr-name">[resource]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>element<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>kd-dynamic-cell</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-cell</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ng-container</span><span class="token punctuation">></span></span>
+
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-header-row</span> <span class="token attr-name">*matHeaderRowDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>getColumns()<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-header-row</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-row</span> <span class="token attr-name">#matrow</span> <span class="token attr-name">(mouseover)</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>onRowOver(index)<span class="token punctuation">"</span></span> <span class="token attr-name">(mouseleave)</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>onRowLeave()<span class="token punctuation">"</span></span> <span class="token attr-name">(click)</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>expand(index, row)<span class="token punctuation">"</span></span>
+        <span class="token attr-name">[ngClass]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>{<span class="token punctuation">'</span>kd-no-bottom-border<span class="token punctuation">'</span>: isRowExpanded(index), <span class="token punctuation">'</span>kd-clickable<span class="token punctuation">'</span>: hasErrors(row)}<span class="token punctuation">"</span></span>
+        <span class="token attr-name">*matRowDef</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>let row; columns: getColumns(); let index<span class="token punctuation">=</span>index<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-row</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-table</span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mat-paginator</span> <span class="token attr-name">[length]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>totalItems<span class="token punctuation">"</span></span> <span class="token attr-name">[pageSize]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>pageSize<span class="token punctuation">"</span></span> <span class="token attr-name">[pageSizeOptions]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>pageSizeOptions<span class="token punctuation">"</span></span> <span class="token attr-name">showFirstLastButtons</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mat-paginator</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">content</span> <span class="token attr-name">[hidden]</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>!showZeroState()<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>kd-list-zero-state</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>kd-list-zero-state</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre>
+<h5 id="继承父类"><a href="#继承父类" class="headerlink" title="继承父类"></a>继承父类</h5><p>list.ts  基类定义</p>
+<pre class=" language-ts"><code class="language-ts"><span class="token keyword">import</span> <span class="token punctuation">{</span> DataSource <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@angular/cdk/collections'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> HttpParams <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@angular/common/http'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span>
+  ChangeDetectorRef<span class="token punctuation">,</span>
+  ComponentFactoryResolver<span class="token punctuation">,</span>
+  EventEmitter<span class="token punctuation">,</span>
+  Inject<span class="token punctuation">,</span>
+  Input<span class="token punctuation">,</span>
+  OnDestroy<span class="token punctuation">,</span>
+  OnInit<span class="token punctuation">,</span>
+  AfterViewInit<span class="token punctuation">,</span>
+  Output<span class="token punctuation">,</span>
+  QueryList<span class="token punctuation">,</span>
+  Type<span class="token punctuation">,</span>
+  ViewChild<span class="token punctuation">,</span>
+  ViewChildren<span class="token punctuation">,</span>
+  ViewContainerRef<span class="token punctuation">,</span>
+<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@angular/core'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> MatPaginator<span class="token punctuation">,</span> MatSort<span class="token punctuation">,</span> MatTableDataSource <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@angular/material'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Router <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@angular/router'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Event as KdEvent<span class="token punctuation">,</span> Resource<span class="token punctuation">,</span> ResourceList <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@api/symui'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span>
+  ActionColumn<span class="token punctuation">,</span>
+  ActionColumnDef<span class="token punctuation">,</span>
+  ColumnWhenCallback<span class="token punctuation">,</span>
+  ColumnWhenCondition<span class="token punctuation">,</span>
+  OnListChangeEvent<span class="token punctuation">,</span>
+<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@api/symui'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Subject <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'rxjs'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Observable<span class="token punctuation">,</span> ObservableInput <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'rxjs/Observable'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> merge <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'rxjs/observable/merge'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> startWith<span class="token punctuation">,</span> switchMap<span class="token punctuation">,</span> takeUntil <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'rxjs/operators'</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// import { SEARCH_QUERY_STATE_PARAM } from '../params/params';</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> KdStateService <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@service/global/state.service'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> LocaltionService <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@service/global/localtion.service'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> CardListFilterComponent <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'../components/list/filter/filter.component'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> NotificationsService <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@service/global/notifications.service'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> GlobalServicesModule <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@service/global/global.module'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> RowDetailComponent <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'../components/list/rowdetail/rowdetail.component'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> ConfigService <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@service/global/config.service'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> abstract <span class="token keyword">class</span> <span class="token class-name">ResourceListBase</span><span class="token operator">&lt;</span>T <span class="token keyword">extends</span> <span class="token class-name">ResourceList</span><span class="token punctuation">,</span> R <span class="token keyword">extends</span> <span class="token class-name">Resource</span><span class="token operator">></span>
+  <span class="token keyword">implements</span> <span class="token class-name">OnInit</span><span class="token punctuation">,</span> OnDestroy<span class="token punctuation">,</span> AfterViewInit <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// Base properties</span>
+  <span class="token keyword">private</span> readonly actionColumns_<span class="token punctuation">:</span> <span class="token keyword">Array</span><span class="token operator">&lt;</span>ActionColumnDef<span class="token operator">&lt;</span>ActionColumn<span class="token operator">></span><span class="token operator">></span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> readonly data_ <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MatTableDataSource</span><span class="token operator">&lt;</span>R<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">private</span> listUpdates_ <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Subject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">private</span> unsubscribe_ <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Subject</span><span class="token operator">&lt;</span><span class="token keyword">void</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">private</span> loaded_ <span class="token operator">=</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+  <span class="token keyword">private</span> readonly dynamicColumns_<span class="token punctuation">:</span> ColumnWhenCondition<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// private paramsService_: ParamsService;</span>
+  <span class="token keyword">private</span> router_<span class="token punctuation">:</span> Router<span class="token punctuation">;</span>
+  <span class="token keyword">protected</span> readonly kdState_<span class="token punctuation">:</span> KdStateService<span class="token punctuation">;</span>
+  <span class="token keyword">protected</span> readonly settingsService_<span class="token punctuation">:</span> ConfigService<span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// protected readonly namespaceService_: NamespaceService;</span>
+  <span class="token keyword">protected</span> readonly localtionService_<span class="token punctuation">:</span> LocaltionService<span class="token punctuation">;</span>
+
+  isLoading <span class="token operator">=</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+  totalItems <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">get</span> <span class="token function">itemsPerPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">number</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>settingsService_<span class="token punctuation">.</span><span class="token function">getItemsPerPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  @<span class="token function">Output</span><span class="token punctuation">(</span><span class="token string">'onchange'</span><span class="token punctuation">)</span> onChange<span class="token punctuation">:</span> EventEmitter<span class="token operator">&lt;</span>OnListChangeEvent<span class="token operator">></span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">EventEmitter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  @<span class="token function">Input</span><span class="token punctuation">(</span><span class="token punctuation">)</span> groupId<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">;</span>
+  @<span class="token function">Input</span><span class="token punctuation">(</span><span class="token punctuation">)</span> hideable <span class="token operator">=</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+  @<span class="token function">Input</span><span class="token punctuation">(</span><span class="token punctuation">)</span> id<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// Data select properties</span>
+  @<span class="token function">ViewChild</span><span class="token punctuation">(</span>MatSort<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token keyword">static</span><span class="token punctuation">:</span> <span class="token keyword">false</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token keyword">private</span> readonly matSort_<span class="token punctuation">:</span> MatSort<span class="token punctuation">;</span>
+  @<span class="token function">ViewChild</span><span class="token punctuation">(</span>MatPaginator<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token keyword">static</span><span class="token punctuation">:</span> <span class="token keyword">false</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token keyword">private</span> readonly matPaginator_<span class="token punctuation">:</span> MatPaginator<span class="token punctuation">;</span>
+  @<span class="token function">ViewChild</span><span class="token punctuation">(</span>CardListFilterComponent<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token keyword">static</span><span class="token punctuation">:</span> <span class="token keyword">false</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token keyword">private</span> readonly cardFilter_<span class="token punctuation">:</span> CardListFilterComponent<span class="token punctuation">;</span>
+
+  <span class="token keyword">protected</span> <span class="token keyword">constructor</span><span class="token punctuation">(</span>
+    <span class="token keyword">private</span> readonly stateName_<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span>
+    <span class="token keyword">private</span> readonly notifications_<span class="token punctuation">:</span> NotificationsService<span class="token punctuation">,</span>
+    <span class="token keyword">private</span> readonly cdr_<span class="token punctuation">:</span> ChangeDetectorRef<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// this.settingsService_ = GlobalServicesModule.injector.get(GlobalSettingsService);</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>kdState_ <span class="token operator">=</span> GlobalServicesModule<span class="token punctuation">.</span>injector<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>KdStateService<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// this.namespaceService_ = GlobalServicesModule.injector.get(NamespaceService);</span>
+    <span class="token comment" spellcheck="true">// this.paramsService_ = GlobalServicesModule.injector.get(ParamsService);</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>router_ <span class="token operator">=</span> GlobalServicesModule<span class="token punctuation">.</span>injector<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>Router<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>localtionService_ <span class="token operator">=</span> GlobalServicesModule<span class="token punctuation">.</span>injector<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>LocaltionService<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>settingsService_ <span class="token operator">=</span> GlobalServicesModule<span class="token punctuation">.</span>injector<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>ConfigService<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">ngOnInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token function">Error</span><span class="token punctuation">(</span><span class="token string">'ID is a required attribute of list component.'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// if (this.matPaginator_ === undefined) {</span>
+    <span class="token comment" spellcheck="true">//   throw Error('MatPaginator has to be defined on a table.');</span>
+    <span class="token comment" spellcheck="true">// }</span>
+
+    <span class="token comment" spellcheck="true">// this.namespaceService_.onNamespaceChangeEvent.subscribe(() => {</span>
+    <span class="token comment" spellcheck="true">//   this.isLoading = true;</span>
+    <span class="token comment" spellcheck="true">//   this.listUpdates_.next();</span>
+    <span class="token comment" spellcheck="true">// });</span>
+
+    <span class="token comment" spellcheck="true">// this.paramsService_.onParamChange.subscribe(() => {</span>
+    <span class="token comment" spellcheck="true">//   this.isLoading = true;</span>
+    <span class="token comment" spellcheck="true">//   this.listUpdates_.next();</span>
+    <span class="token comment" spellcheck="true">// });</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">ngAfterViewInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">.</span>sort <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>matSort_<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">.</span>paginator <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>matPaginator_<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 表格搜索</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">.</span>filterEvent<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> filterValue <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">.</span>query<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">.</span>filter <span class="token operator">=</span> filterValue<span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">ngOnDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>unsubscribe_<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>unsubscribe_<span class="token punctuation">.</span><span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getDetailsHref</span><span class="token punctuation">(</span>resourceName<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span> namespace<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">string</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>stateName_ <span class="token operator">?</span> <span class="token keyword">this</span><span class="token punctuation">.</span>kdState_<span class="token punctuation">.</span><span class="token function">href</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>stateName_<span class="token punctuation">,</span> resourceName<span class="token punctuation">,</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>localtionService_<span class="token punctuation">.</span><span class="token function">current</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>project <span class="token operator">+</span> <span class="token string">'-'</span> <span class="token operator">+</span> namespace<span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      cluster<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>localtionService_<span class="token punctuation">.</span><span class="token function">current</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>cluster
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> DataSource<span class="token operator">&lt;</span>R<span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getList</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getObservableWithDataSelect_</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">pipe</span><span class="token punctuation">(</span><span class="token function">startWith</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">pipe</span><span class="token punctuation">(</span>
+        <span class="token function">switchMap</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>isLoading <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cdr_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>cdr_<span class="token punctuation">.</span><span class="token function">markForCheck</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>cdr_<span class="token punctuation">.</span><span class="token function">detectChanges</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+          <span class="token comment" spellcheck="true">// 暂时去掉排序分页参数</span>
+          <span class="token comment" spellcheck="true">// return this.getResourceObservable(this.getDataSelectParams_());</span>
+          <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getResourceObservable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">pipe</span><span class="token punctuation">(</span><span class="token function">takeUntil</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>unsubscribe_<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> T<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>notifications_<span class="token punctuation">.</span><span class="token function">pushErrors</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span>errors<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">.</span>data <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>totalItems <span class="token operator">=</span> data<span class="token punctuation">.</span>listMeta<span class="token punctuation">.</span>totalItems<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>isLoading <span class="token operator">=</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>loaded_ <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">onListChange_</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cdr_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>cdr_<span class="token punctuation">.</span><span class="token function">detectChanges</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">showZeroState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>totalItems <span class="token operator">===</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>isLoading<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">isHidden</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>hideable <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">filtered_</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">showZeroState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getColumns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> displayColumns <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getDisplayColumns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> actionColumns <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>actionColumns_<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>col <span class="token operator">=</span><span class="token operator">></span> col<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> condition of <span class="token keyword">this</span><span class="token punctuation">.</span>dynamicColumns_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>condition<span class="token punctuation">.</span><span class="token function">whenCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> afterColIdx <span class="token operator">=</span> displayColumns<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>condition<span class="token punctuation">.</span>afterCol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        displayColumns<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>afterColIdx <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> condition<span class="token punctuation">.</span>col<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> displayColumns<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token operator">...</span>actionColumns<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getActionColumns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">Array</span><span class="token operator">&lt;</span>ActionColumnDef<span class="token operator">&lt;</span>ActionColumn<span class="token operator">></span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>actionColumns_<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">shouldShowColumn</span><span class="token punctuation">(</span>dynamicColName<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> col <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>dynamicColumns_<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>condition <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> condition<span class="token punctuation">.</span>col <span class="token operator">===</span> dynamicColName<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>col <span class="token operator">!==</span> undefined<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> col<span class="token punctuation">.</span><span class="token function">whenCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">protected</span> registerActionColumn<span class="token operator">&lt;</span>C <span class="token keyword">extends</span> <span class="token class-name">ActionColumn</span><span class="token operator">></span><span class="token punctuation">(</span>name<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span> component<span class="token punctuation">:</span> Type<span class="token operator">&lt;</span>C<span class="token operator">></span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>actionColumns_<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      name<span class="token punctuation">:</span> <span class="token template-string"><span class="token string">`action-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">,</span>
+      component<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span> as ActionColumnDef<span class="token operator">&lt;</span>ActionColumn<span class="token operator">></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">protected</span> <span class="token function">registerDynamicColumn</span><span class="token punctuation">(</span>
+    col<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span>
+    afterCol<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span>
+    whenCallback<span class="token punctuation">:</span> ColumnWhenCallback<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>dynamicColumns_<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      col<span class="token punctuation">,</span>
+      afterCol<span class="token punctuation">,</span>
+      whenCallback<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span> as ColumnWhenCondition<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> getObservableWithDataSelect_<span class="token operator">&lt;</span>E<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> Observable<span class="token operator">&lt;</span>E<span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// const obsInput = [this.matPaginator_.page] as Array&lt;ObservableInput&lt;E>>;</span>
+    <span class="token keyword">const</span> obsInput <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> as <span class="token keyword">Array</span><span class="token operator">&lt;</span>ObservableInput<span class="token operator">&lt;</span>E<span class="token operator">></span><span class="token operator">></span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 暂时去掉排序请求</span>
+    <span class="token comment" spellcheck="true">// if (this.matSort_) {</span>
+    <span class="token comment" spellcheck="true">//   this.matSort_.sortChange.subscribe(() => (this.matPaginator_.pageIndex = 0));</span>
+    <span class="token comment" spellcheck="true">//   obsInput.push(this.matSort_.sortChange);</span>
+    <span class="token comment" spellcheck="true">// }</span>
+
+    <span class="token comment" spellcheck="true">// 暂时去掉字段过滤</span>
+    <span class="token comment" spellcheck="true">// if (this.cardFilter_) {</span>
+      <span class="token comment" spellcheck="true">// this.cardFilter_.filterEvent.subscribe(() => (this.matPaginator_.pageIndex = 0));</span>
+      <span class="token comment" spellcheck="true">// obsInput.push(this.cardFilter_.filterEvent);</span>
+    <span class="token comment" spellcheck="true">// }</span>
+
+    <span class="token keyword">return</span> <span class="token function">merge</span><span class="token punctuation">(</span><span class="token operator">...</span>obsInput<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>listUpdates_ as Subject<span class="token operator">&lt;</span>E<span class="token operator">></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">getDataSelectParams_</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> HttpParams <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> params <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">paginate_</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>matSort_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      params <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">sort_</span><span class="token punctuation">(</span>params<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      params <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">filter_</span><span class="token punctuation">(</span>params<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">search_</span><span class="token punctuation">(</span>params<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">sort_</span><span class="token punctuation">(</span>params<span class="token operator">?</span><span class="token punctuation">:</span> HttpParams<span class="token punctuation">)</span><span class="token punctuation">:</span> HttpParams <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HttpParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>params<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      result <span class="token operator">=</span> params<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> result<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'sortBy'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getSortBy_</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">paginate_</span><span class="token punctuation">(</span>params<span class="token operator">?</span><span class="token punctuation">:</span> HttpParams<span class="token punctuation">)</span><span class="token punctuation">:</span> HttpParams <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HttpParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>params<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      result <span class="token operator">=</span> params<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> result
+      <span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'itemsPerPage'</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>itemsPerPage<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'page'</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>matPaginator_<span class="token punctuation">.</span>pageIndex <span class="token operator">+</span> <span class="token number">1</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">filter_</span><span class="token punctuation">(</span>params<span class="token operator">?</span><span class="token punctuation">:</span> HttpParams<span class="token punctuation">)</span><span class="token punctuation">:</span> HttpParams <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HttpParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>params<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      result <span class="token operator">=</span> params<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">const</span> filterByQuery <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">.</span>query <span class="token operator">?</span> <span class="token template-string"><span class="token string">`name,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">.</span>query<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span> <span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>filterByQuery<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> result<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'filterBy'</span><span class="token punctuation">,</span> filterByQuery<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">search_</span><span class="token punctuation">(</span>params<span class="token operator">?</span><span class="token punctuation">:</span> HttpParams<span class="token punctuation">)</span><span class="token punctuation">:</span> HttpParams <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HttpParams</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>params<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      result <span class="token operator">=</span> params<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">const</span> filterByQuery <span class="token operator">=</span> result<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'filterBy'</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>router_<span class="token punctuation">.</span>routerState<span class="token punctuation">.</span>snapshot<span class="token punctuation">.</span>url<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">'/search'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// const query = this.paramsService_.getQueryParam(SEARCH_QUERY_STATE_PARAM);</span>
+      <span class="token comment" spellcheck="true">// if (query) {</span>
+      <span class="token comment" spellcheck="true">//   if (filterByQuery) {</span>
+      <span class="token comment" spellcheck="true">//     filterByQuery += ',';</span>
+      <span class="token comment" spellcheck="true">//   }</span>
+      <span class="token comment" spellcheck="true">//   filterByQuery += `name,${query}`;</span>
+      <span class="token comment" spellcheck="true">// }</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>filterByQuery<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> result<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'filterBy'</span><span class="token punctuation">,</span> filterByQuery<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">filtered_</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token operator">!</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">filter_</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'filterBy'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">getSortBy_</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">string</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Default values.</span>
+    <span class="token keyword">let</span> ascending <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> active <span class="token operator">=</span> <span class="token string">'age'</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>matSort_<span class="token punctuation">.</span>direction<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      ascending <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>matSort_<span class="token punctuation">.</span>direction <span class="token operator">===</span> <span class="token string">'asc'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>matSort_<span class="token punctuation">.</span>active<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      active <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>matSort_<span class="token punctuation">.</span>active<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>active <span class="token operator">===</span> <span class="token string">'age'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      ascending <span class="token operator">=</span> <span class="token operator">!</span>ascending<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>ascending <span class="token operator">?</span> <span class="token string">'a'</span> <span class="token punctuation">:</span> <span class="token string">'d'</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">mapToBackendValue_</span><span class="token punctuation">(</span>active<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">mapToBackendValue_</span><span class="token punctuation">(</span>sortByColumnName<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">string</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> sortByColumnName <span class="token operator">===</span> <span class="token string">'age'</span> <span class="token operator">?</span> <span class="token string">'creationTimestamp'</span> <span class="token punctuation">:</span> sortByColumnName<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">onListChange_</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> T<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> emitValue <span class="token operator">=</span> <span class="token punctuation">{</span>
+      id<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>id<span class="token punctuation">,</span>
+      groupId<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>groupId<span class="token punctuation">,</span>
+      items<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>totalItems<span class="token punctuation">,</span>
+      filtered<span class="token punctuation">:</span> <span class="token keyword">false</span><span class="token punctuation">,</span>
+      resourceList<span class="token punctuation">:</span> data<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span> as OnListChangeEvent<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      emitValue<span class="token punctuation">.</span>filtered <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">filtered_</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span>onChange<span class="token punctuation">.</span><span class="token function">emit</span><span class="token punctuation">(</span>emitValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">protected</span> abstract <span class="token function">getDisplayColumns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  abstract <span class="token function">getResourceObservable</span><span class="token punctuation">(</span>params<span class="token operator">?</span><span class="token punctuation">:</span> HttpParams<span class="token punctuation">)</span><span class="token punctuation">:</span> Observable<span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">;</span>
+
+  abstract <span class="token function">map</span><span class="token punctuation">(</span>value<span class="token punctuation">:</span> T<span class="token punctuation">)</span><span class="token punctuation">:</span> R<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> abstract <span class="token keyword">class</span> <span class="token class-name">ResourceListWithStatuses</span><span class="token operator">&lt;</span>
+  T <span class="token keyword">extends</span> <span class="token class-name">ResourceList</span><span class="token punctuation">,</span>
+  R <span class="token keyword">extends</span> <span class="token class-name">Resource</span>
+  <span class="token operator">></span> <span class="token keyword">extends</span> <span class="token class-name">ResourceListBase</span><span class="token operator">&lt;</span>T<span class="token punctuation">,</span> R<span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">private</span> readonly bindings_<span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token punctuation">[</span>hash<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">]</span><span class="token punctuation">:</span> StateBinding<span class="token operator">&lt;</span>R<span class="token operator">></span> <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  @<span class="token function">ViewChildren</span><span class="token punctuation">(</span><span class="token string">'matrow'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> read<span class="token punctuation">:</span> ViewContainerRef <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token keyword">private</span> readonly containers_<span class="token punctuation">:</span> QueryList<span class="token operator">&lt;</span>ViewContainerRef<span class="token operator">></span><span class="token punctuation">;</span>
+  <span class="token keyword">private</span> lastHash_<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">;</span>
+  <span class="token keyword">private</span> readonly unknownStatus<span class="token punctuation">:</span> StatusIcon <span class="token operator">=</span> <span class="token punctuation">{</span>
+    iconName<span class="token punctuation">:</span> <span class="token string">'help'</span><span class="token punctuation">,</span>
+    iconClass<span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token string">''</span><span class="token punctuation">:</span> <span class="token keyword">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">protected</span> icon <span class="token operator">=</span> IconName<span class="token punctuation">;</span>
+
+  expandedRow<span class="token punctuation">:</span> <span class="token keyword">number</span> <span class="token operator">=</span> undefined<span class="token punctuation">;</span>
+  hoveredRow<span class="token punctuation">:</span> <span class="token keyword">number</span> <span class="token operator">=</span> undefined<span class="token punctuation">;</span>
+
+  <span class="token keyword">protected</span> <span class="token keyword">constructor</span><span class="token punctuation">(</span>
+    stateName<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span>
+    <span class="token keyword">private</span> readonly notifications<span class="token punctuation">:</span> NotificationsService<span class="token punctuation">,</span>
+    cdr<span class="token punctuation">:</span> ChangeDetectorRef<span class="token punctuation">,</span>
+    <span class="token keyword">private</span> readonly resolver_<span class="token operator">?</span><span class="token punctuation">:</span> ComponentFactoryResolver<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>stateName<span class="token punctuation">,</span> notifications<span class="token punctuation">,</span> cdr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span>onChange<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>clearExpandedRows_<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">expand</span><span class="token punctuation">(</span>index<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">,</span> resource<span class="token punctuation">:</span> R<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">hasErrors</span><span class="token punctuation">(</span>resource<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>expandedRow <span class="token operator">!==</span> undefined<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>containers_<span class="token punctuation">.</span><span class="token function">toArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>expandedRow<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>expandedRow <span class="token operator">===</span> index<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>expandedRow <span class="token operator">=</span> undefined<span class="token punctuation">;</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">const</span> container <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>containers_<span class="token punctuation">.</span><span class="token function">toArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> factory <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>resolver_<span class="token punctuation">.</span><span class="token function">resolveComponentFactory</span><span class="token punctuation">(</span>RowDetailComponent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> component <span class="token operator">=</span> container<span class="token punctuation">.</span><span class="token function">createComponent</span><span class="token punctuation">(</span>factory<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    component<span class="token punctuation">.</span>instance<span class="token punctuation">.</span>events <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getEvents</span><span class="token punctuation">(</span>resource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>expandedRow <span class="token operator">=</span> index<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+
+  <span class="token function">compare</span><span class="token punctuation">(</span>a<span class="token punctuation">:</span> <span class="token keyword">number</span> <span class="token operator">|</span> <span class="token keyword">string</span><span class="token punctuation">,</span> b<span class="token punctuation">:</span> <span class="token keyword">number</span> <span class="token operator">|</span> <span class="token keyword">string</span><span class="token punctuation">,</span> isAsc<span class="token punctuation">:</span> <span class="token keyword">boolean</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>a <span class="token operator">&lt;</span> b <span class="token operator">?</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>isAsc <span class="token operator">?</span> <span class="token number">1</span> <span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getStatus</span><span class="token punctuation">(</span>resource<span class="token punctuation">:</span> R<span class="token punctuation">)</span><span class="token punctuation">:</span> StatusIcon <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>lastHash_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> stateBinding <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>bindings_<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>lastHash_<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>stateBinding<span class="token punctuation">.</span><span class="token function">callbackFunction</span><span class="token punctuation">(</span>resource<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getStatusObject_</span><span class="token punctuation">(</span>stateBinding<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// map() is needed here to cast hash from string to number. Without it compiler will not</span>
+    <span class="token comment" spellcheck="true">// recognize stateBinding type.</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> hash of Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>bindings_<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span>hashStr<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">number</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token function">Number</span><span class="token punctuation">(</span>hashStr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> stateBinding <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>bindings_<span class="token punctuation">[</span>hash<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>stateBinding<span class="token punctuation">.</span><span class="token function">callbackFunction</span><span class="token punctuation">(</span>resource<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>lastHash_ <span class="token operator">=</span> <span class="token function">Number</span><span class="token punctuation">(</span>hash<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getStatusObject_</span><span class="token punctuation">(</span>stateBinding<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>unknownStatus<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">isRowExpanded</span><span class="token punctuation">(</span>index<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>expandedRow <span class="token operator">===</span> index<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">isRowHovered</span><span class="token punctuation">(</span>index<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>hoveredRow <span class="token operator">===</span> index<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">onRowOver</span><span class="token punctuation">(</span>rowIdx<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>hoveredRow <span class="token operator">=</span> rowIdx<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">onRowLeave</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>hoveredRow <span class="token operator">=</span> undefined<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">showHoverIcon</span><span class="token punctuation">(</span>index<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">,</span> resource<span class="token punctuation">:</span> R<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">isRowHovered</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">hasErrors</span><span class="token punctuation">(</span>resource<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">isRowExpanded</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">protected</span> <span class="token function">getEvents</span><span class="token punctuation">(</span>_resource<span class="token punctuation">:</span> R<span class="token punctuation">)</span><span class="token punctuation">:</span> KdEvent<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">protected</span> <span class="token function">hasErrors</span><span class="token punctuation">(</span>_resource<span class="token punctuation">:</span> R<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">protected</span> <span class="token function">registerBinding</span><span class="token punctuation">(</span>
+    iconName<span class="token punctuation">:</span> IconName<span class="token punctuation">,</span>
+    iconClass<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span>
+    callbackFunction<span class="token punctuation">:</span> StatusCheckCallback<span class="token operator">&lt;</span>R<span class="token operator">></span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> icon <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Icon</span><span class="token punctuation">(</span><span class="token function">String</span><span class="token punctuation">(</span>iconName<span class="token punctuation">)</span><span class="token punctuation">,</span> iconClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>bindings_<span class="token punctuation">[</span>icon<span class="token punctuation">.</span><span class="token function">hash</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span> icon<span class="token punctuation">,</span> callbackFunction <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">clearExpandedRows_</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> containers <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>containers_<span class="token punctuation">.</span><span class="token function">toArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> containers<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      containers<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>expandedRow <span class="token operator">=</span> undefined<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">private</span> <span class="token function">getStatusObject_</span><span class="token punctuation">(</span>stateBinding<span class="token punctuation">:</span> StateBinding<span class="token operator">&lt;</span>R<span class="token operator">></span><span class="token punctuation">)</span><span class="token punctuation">:</span> StatusIcon <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      iconName<span class="token punctuation">:</span> stateBinding<span class="token punctuation">.</span>icon<span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+      iconClass<span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token punctuation">[</span>stateBinding<span class="token punctuation">.</span>icon<span class="token punctuation">.</span>cssClass<span class="token punctuation">]</span><span class="token punctuation">:</span> <span class="token keyword">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">interface</span> <span class="token class-name">StatusIcon</span> <span class="token punctuation">{</span>
+  iconName<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">;</span>
+  iconClass<span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token punctuation">[</span>className<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">]</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">enum</span> IconName <span class="token punctuation">{</span>
+  error <span class="token operator">=</span> <span class="token string">'error'</span><span class="token punctuation">,</span>
+  timelapse <span class="token operator">=</span> <span class="token string">'timelapse'</span><span class="token punctuation">,</span>
+  checkCircle <span class="token operator">=</span> <span class="token string">'check_circle'</span><span class="token punctuation">,</span>
+  help <span class="token operator">=</span> <span class="token string">'help'</span><span class="token punctuation">,</span>
+  warning <span class="token operator">=</span> <span class="token string">'warning'</span><span class="token punctuation">,</span>
+  none <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Icon</span> <span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">;</span>
+  cssClass<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span>name<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span> cssClass<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>cssClass <span class="token operator">=</span> cssClass<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">/**
+   * Implementation of djb2 hash function:
+   * http://www.cse.yorku.ca/~oz/hash.html
+   */</span>
+  <span class="token function">hash</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">number</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> value <span class="token operator">=</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">#</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>cssClass<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> value
+      <span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>str <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> str<span class="token punctuation">.</span><span class="token function">charCodeAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span>prev<span class="token punctuation">,</span> curr<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>prev <span class="token operator">&lt;</span><span class="token operator">&lt;</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> prev <span class="token operator">+</span> curr<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">5381</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+type StatusCheckCallback<span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token operator">=</span> <span class="token punctuation">(</span>resource<span class="token punctuation">:</span> T<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token keyword">boolean</span><span class="token punctuation">;</span>
+
+<span class="token keyword">interface</span> <span class="token class-name">StateBinding</span><span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token punctuation">{</span>
+  icon<span class="token punctuation">:</span> Icon<span class="token punctuation">;</span>
+  callbackFunction<span class="token punctuation">:</span> StatusCheckCallback<span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>application.component.ts</p>
+<pre class=" language-ts"><code class="language-ts"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">ApplicationListComponent</span> <span class="token keyword">extends</span> <span class="token class-name">ResourceListWithStatuses</span><span class="token operator">&lt;</span>ApplicationList<span class="token punctuation">,</span> Application<span class="token operator">></span> <span class="token punctuation">{</span>
+  @<span class="token function">Input</span><span class="token punctuation">(</span><span class="token punctuation">)</span> endpoint <span class="token operator">=</span> EndpointManager<span class="token punctuation">.</span><span class="token function">resource</span><span class="token punctuation">(</span>Resource<span class="token punctuation">.</span>application<span class="token punctuation">,</span> <span class="token keyword">true</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">list</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  @<span class="token function">Input</span><span class="token punctuation">(</span><span class="token punctuation">)</span> showMetrics <span class="token operator">=</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+  @<span class="token function">Input</span><span class="token punctuation">(</span><span class="token punctuation">)</span> initialized<span class="token punctuation">:</span> <span class="token keyword">boolean</span><span class="token punctuation">;</span>
+  @<span class="token function">Input</span><span class="token punctuation">(</span><span class="token punctuation">)</span> deployment<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">;</span>
+
+  cumulativeMetrics<span class="token punctuation">:</span> Metric<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  pageSize <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+  pageSizeOptions<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  namespace<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">;</span>
+  nsList<span class="token punctuation">:</span> <span class="token keyword">any</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span>
+    <span class="token keyword">private</span> router<span class="token punctuation">:</span> Router<span class="token punctuation">,</span>
+    <span class="token keyword">private</span> readonly application_<span class="token punctuation">:</span> NamespacedResourceService<span class="token operator">&lt;</span>ApplicationList<span class="token operator">></span><span class="token punctuation">,</span>
+    resolver<span class="token punctuation">:</span> ComponentFactoryResolver<span class="token punctuation">,</span>
+    notifications<span class="token punctuation">:</span> NotificationsService<span class="token punctuation">,</span>
+    cdr<span class="token punctuation">:</span> ChangeDetectorRef<span class="token punctuation">,</span>
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token string">'application'</span><span class="token punctuation">,</span> notifications<span class="token punctuation">,</span> cdr<span class="token punctuation">,</span> resolver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">=</span> ListIdentifier<span class="token punctuation">.</span>application<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>groupId <span class="token operator">=</span> ListGroupIdentifier<span class="token punctuation">.</span>workloads<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// Register status icon handlers</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerBinding</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>icon<span class="token punctuation">.</span>checkCircle<span class="token punctuation">,</span> <span class="token string">'kd-success'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>isInSuccessState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerBinding</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>icon<span class="token punctuation">.</span>error<span class="token punctuation">,</span> <span class="token string">'kd-error'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>isInErrorState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// Register action columns.</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>registerActionColumn<span class="token operator">&lt;</span>MenuComponent<span class="token operator">></span><span class="token punctuation">(</span><span class="token string">'menu'</span><span class="token punctuation">,</span> MenuComponent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token operator">...</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+  <span class="token punctuation">}</span></code></pre>
+<h5 id="重写父类方法"><a href="#重写父类方法" class="headerlink" title="重写父类方法"></a>重写父类方法</h5><p>通过继承基类<code>ResourceListWithStatuses</code>，可以复用其基本的功能属性，同时可以定义属性和方法扩展列表组件的功能，实现这个列表组件主要的是如果<strong>调用组件方法发起请求，获取到数据</strong></p>
+<ul>
+<li><p>重写<code>getResourceObservable</code> 方法，该方法主要是返回一个Observable，进行异步编程。</p>
+<p>在这个方法里，可以请求多个api，使用Observable.forkJoin，可以合并多个Observable，返回一个Observable。</p>
+</li>
+<li><p>结合<code>sym-select</code> 组件搜索</p>
+
+
+
+</li>
+</ul>
+<p>  <code>sym-select</code>组件的namespace下拉列表的数据nsList是异步获取的，如果是选择是的namespace是ALL，那么列表组件要获取到nsList，然后对每个nsList里的namespace进行全部请求。如果选择的是某个namesapce，那么就传入namespace的值，进行单个请求</p>
+<p>  <strong>这里也是比较疑惑的地方</strong>，之前想通过<code>@Input</code>传入属性的方式，来把搜索组件的数据传递给applicaiton列表组件<code>sym-application-list</code></p>
+<p>  <img src="/.com//F:%5C%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%5C%E5%8D%9A%E5%AE%A2%E6%96%87%E6%A1%A3%5CApplication%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E8%BD%AC%E5%92%8C%E6%A8%A1%E5%9D%97%E5%85%B3%E7%B3%BB%5Cimg%5Cinput.png" alt></p>
+<p>  但是尝试之后，发现在页面初始化的时候，通过<code>@Input</code>的属性传入的<code>nsList</code>为空的。如果传入的属性是同步获取的，则可以传递到application列表组件中</p>
+<p>  最后获取搜索参数的方式，采取<strong>服务依赖注入</strong>的方式来获取。</p>
+<p>  <img src="/.com//F:%5C%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%5C%E5%8D%9A%E5%AE%A2%E6%96%87%E6%A1%A3%5CApplication%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E8%BD%AC%E5%92%8C%E6%A8%A1%E5%9D%97%E5%85%B3%E7%B3%BB%5Cimg%5Csubscribe.png" alt></p>
+<ul>
+<li>通过重写map 方法，在自定义表格的数据，返回所需表格的数据。</li>
+</ul>
+<pre class=" language-ts"><code class="language-ts"><span class="token function">ngOnInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">.</span>sortingDataAccessor <span class="token operator">=</span> <span class="token punctuation">(</span>item<span class="token punctuation">,</span> property<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      <span class="token keyword">switch</span> <span class="token punctuation">(</span>property<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">case</span> <span class="token string">'name'</span><span class="token punctuation">:</span> <span class="token keyword">return</span> item<span class="token punctuation">.</span>objectMeta<span class="token punctuation">.</span>name<span class="token punctuation">;</span>
+        <span class="token keyword">case</span> <span class="token string">'creationTimestamp'</span><span class="token punctuation">:</span> <span class="token keyword">return</span> item<span class="token punctuation">.</span>status<span class="token punctuation">.</span>creationTimestamp<span class="token punctuation">;</span>
+        <span class="token keyword">case</span> <span class="token string">'namespace'</span><span class="token punctuation">:</span> <span class="token keyword">return</span> item<span class="token punctuation">.</span>objectMeta<span class="token punctuation">.</span>namespace<span class="token punctuation">;</span>
+        <span class="token keyword">default</span><span class="token punctuation">:</span> <span class="token keyword">return</span> item<span class="token punctuation">[</span>property<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">getResourceObservable</span><span class="token punctuation">(</span>params<span class="token operator">?</span><span class="token punctuation">:</span> HttpParams<span class="token punctuation">)</span><span class="token punctuation">:</span> Observable<span class="token operator">&lt;</span>ApplicationList<span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> res <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>localtionService_<span class="token punctuation">.</span>onNamespaceUpdate<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>namespace <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>localtionService_<span class="token punctuation">.</span><span class="token function">current</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>namespace<span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>nsList <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>localtionService_<span class="token punctuation">.</span><span class="token function">current</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>namespaceList<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> data<span class="token punctuation">:</span> <span class="token keyword">any</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+      items<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      listMeta<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        totalItems<span class="token punctuation">:</span> <span class="token number">0</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>namespace <span class="token operator">===</span> <span class="token string">'ALL'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> list <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>nsList<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> observableList <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span>ns<span class="token punctuation">:</span> <span class="token keyword">any</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>application_<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>endpoint<span class="token punctuation">,</span> undefined<span class="token punctuation">,</span> ns<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>observableList <span class="token operator">&amp;&amp;</span> observableList<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+          observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        Observable<span class="token punctuation">.</span><span class="token function">forkJoin</span><span class="token punctuation">(</span>observableList<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">(</span>res<span class="token punctuation">:</span> <span class="token keyword">any</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+          res<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span>item<span class="token punctuation">:</span> <span class="token keyword">any</span><span class="token punctuation">,</span> index<span class="token punctuation">:</span> <span class="token keyword">number</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            item<span class="token punctuation">.</span>items <span class="token operator">=</span> item<span class="token punctuation">.</span>items<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span>v<span class="token punctuation">:</span> <span class="token keyword">any</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+              v<span class="token punctuation">.</span>objectMeta<span class="token punctuation">.</span>namespace <span class="token operator">=</span> list<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">.</span>name<span class="token punctuation">;</span>
+              <span class="token keyword">return</span> v<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            data<span class="token punctuation">.</span>items <span class="token operator">=</span> data<span class="token punctuation">.</span>items<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>item<span class="token punctuation">.</span>items<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            data<span class="token punctuation">.</span>listMeta<span class="token punctuation">.</span>totalItems <span class="token operator">+</span><span class="token operator">=</span> item<span class="token punctuation">.</span>listMeta<span class="token punctuation">.</span>totalItems<span class="token punctuation">;</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>namespace <span class="token operator">!==</span> undefined<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>application_<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>endpoint<span class="token punctuation">,</span> undefined<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>namespace<span class="token punctuation">,</span> params<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">map</span><span class="token punctuation">(</span>applicationList<span class="token punctuation">:</span> ApplicationList<span class="token punctuation">)</span><span class="token punctuation">:</span> Application<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>namespace <span class="token operator">!==</span> <span class="token string">'ALL'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      applicationList<span class="token punctuation">.</span>items <span class="token operator">=</span> applicationList<span class="token punctuation">.</span>items<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span>v<span class="token punctuation">:</span> <span class="token keyword">any</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        v<span class="token punctuation">.</span>objectMeta<span class="token punctuation">.</span>namespace <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>namespace<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> v<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'applicationList'</span><span class="token punctuation">,</span> applicationList<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> applicationList<span class="token punctuation">.</span>items<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">isInErrorState</span><span class="token punctuation">(</span>resource<span class="token punctuation">:</span> Application<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> resource<span class="token punctuation">.</span>status <span class="token operator">?</span> <span class="token punctuation">(</span>resource<span class="token punctuation">.</span>status<span class="token punctuation">.</span>replicas <span class="token operator">&amp;&amp;</span> resource<span class="token punctuation">.</span>status<span class="token punctuation">.</span>replicas <span class="token operator">!==</span> resource<span class="token punctuation">.</span>status<span class="token punctuation">.</span>availableReplicas <span class="token operator">?</span>
+       <span class="token keyword">true</span> <span class="token punctuation">:</span> <span class="token keyword">false</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">isInSuccessState</span><span class="token punctuation">(</span>resource<span class="token punctuation">:</span> Application<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> resource<span class="token punctuation">.</span>status <span class="token operator">?</span> <span class="token punctuation">(</span>resource<span class="token punctuation">.</span>status<span class="token punctuation">.</span>replicas <span class="token operator">&amp;&amp;</span> resource<span class="token punctuation">.</span>status<span class="token punctuation">.</span>replicas <span class="token operator">===</span> resource<span class="token punctuation">.</span>status<span class="token punctuation">.</span>availableReplicas <span class="token operator">?</span>
+       <span class="token keyword">true</span> <span class="token punctuation">:</span> <span class="token keyword">false</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token keyword">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">protected</span> <span class="token function">getDisplayColumns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token string">'statusicon'</span><span class="token punctuation">,</span> <span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'namespace'</span><span class="token punctuation">,</span> <span class="token string">'labels'</span><span class="token punctuation">,</span> <span class="token string">'replicas'</span><span class="token punctuation">,</span> <span class="token string">'creationTimestamp'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span></code></pre>
+<h4 id="组件使用"><a href="#组件使用" class="headerlink" title="组件使用"></a>组件使用</h4><pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sym-application-list</span> <span class="token attr-name">#applicationList</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sym-application-list</span><span class="token punctuation">></span></span></code></pre>
+<p>初始化时，调用getList请求方法</p>
+<pre class=" language-ts"><code class="language-ts"><span class="token keyword">this</span><span class="token punctuation">.</span>applicationList<span class="token punctuation">.</span><span class="token function">getList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h2 id="公共组件的巧妙之处"><a href="#公共组件的巧妙之处" class="headerlink" title="公共组件的巧妙之处"></a>公共组件的巧妙之处</h2><h5 id="actionColumn-操作列可以自定义"><a href="#actionColumn-操作列可以自定义" class="headerlink" title="actionColumn 操作列可以自定义"></a>actionColumn 操作列可以自定义</h5><p>在基类中已有声明注册操作列的方法，在application列表组件继承该方法，在构造函数中，注册操作列，<code>MenuComponent</code>是引入的组件</p>
+
+
+
+<pre><code>this.registerActionColumn&lt;MenuComponent&gt;(&#39;menu&#39;, MenuComponent);</code></pre><h5 id="过滤功能"><a href="#过滤功能" class="headerlink" title="过滤功能"></a>过滤功能</h5>{% asset_img image-20200430184348308 This is an example image %}
+
+<p>这里的Pods列表组件也是继承了<code>ResourceListWithStatuses</code></p>
+<p>继承的组件都会继承过滤功能，因为继承的组件的模板是自定义的，可以在模板上引入过滤的组件</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>kd-card-list-filter</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>kd-card-list-filter</span><span class="token punctuation">></span></span></code></pre>
+<p>基类中以判断是否有过滤组件，并订阅过滤组件的方法触发列表过滤</p>
+<pre class=" language-ts"><code class="language-ts"><span class="token function">ngAfterViewInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">.</span>sort <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>matSort_<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">.</span>paginator <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>matPaginator_<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 表格搜索</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">.</span>filterEvent<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> filterValue <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cardFilter_<span class="token punctuation">.</span>query<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>data_<span class="token punctuation">.</span>filter <span class="token operator">=</span> filterValue<span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span></code></pre>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>​    通过继承一些列表组件或者基类，可以大大地提升组件功能的复用率，并且能够提高开发效率。在一些业务场景中，我们总会面临着，多处一样的代码，如果有变动，就要全部更改，这样不利于代码的简洁，而且代码逻辑相对单一。由此我们要学会封装一些常用性的组件，来达到代码的复用率，加强代码的健壮性。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-05-24T08:07:34.134Z" itemprop="dateUpdated">2020-05-24 16:07:34</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2020/05/24/angularlist/" target="_blank" rel="external">http://yoursite.com/2020/05/24/angularlist/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="wenyan">
+            wenyan
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/05/24/angularlist/&title=《基于列表类开发的列表组件》 — wenyan&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/05/24/angularlist/&title=《基于列表类开发的列表组件》 — wenyan&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/05/24/angularlist/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于列表类开发的列表组件》 — wenyan&url=http://yoursite.com/2020/05/24/angularlist/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2020/05/24/angularlist/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/05/24/vue3beta/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">vue 3 进入 beta 阶段</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/05/24/angularcreatenew/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Angular 新建页面流程</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "",
+            appKey: "",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <!-- <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div> -->
+    <div class="bottom">
+        <p><span>wenyan &copy; 2019 - 2020</span>
+            <!-- <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span> -->
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/05/24/angularlist/&title=《基于列表类开发的列表组件》 — wenyan&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/05/24/angularlist/&title=《基于列表类开发的列表组件》 — wenyan&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/05/24/angularlist/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于列表类开发的列表组件》 — wenyan&url=http://yoursite.com/2020/05/24/angularlist/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2020/05/24/angularlist/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2020/05/24/angularlist/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'wenyan'blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'wenyan'blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
