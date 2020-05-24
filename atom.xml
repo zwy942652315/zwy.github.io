@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-04-25T11:25:14.902Z</updated>
+  <updated>2020-05-24T08:54:14.876Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>vue3start</title>
+    <title>Vue 3 尝鲜</title>
     <link href="http://yoursite.com/2020/05/24/vue3start/"/>
     <id>http://yoursite.com/2020/05/24/vue3start/</id>
     <published>2020-05-24T08:46:55.396Z</published>
-    <updated>2020-04-25T11:25:14.902Z</updated>
+    <updated>2020-05-24T08:54:14.876Z</updated>
     
     <summary type="html">
     
@@ -29,30 +29,8 @@
       
         
         
-          &lt;h1 id=&quot;Vue-3-尝鲜&quot;&gt;&lt;a href=&quot;#Vue-3-尝鲜&quot; class=&quot;headerlink&quot; title=&quot;Vue 3 尝鲜&quot;&gt;&lt;/a&gt;Vue 3 尝鲜&lt;/h1&gt;&lt;p&gt;4 月 16 日，vue 3 正式进入 beta
-        
-      
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>vue 3 进入 beta 阶段</title>
-    <link href="http://yoursite.com/2020/05/24/vue-3-jin-ru-beta-jie-duan/"/>
-    <id>http://yoursite.com/2020/05/24/vue-3-jin-ru-beta-jie-duan/</id>
-    <published>2020-05-24T08:45:50.736Z</published>
-    <updated>2020-05-24T08:46:00.256Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h2 id=&quot;vue-3-进入-beta-阶段&quot;&gt;&lt;a href=&quot;#vue-3-进入-beta-阶段&quot; class=&quot;headerlink&quot; title=&quot;vue 3 进入 beta 阶段&quot;&gt;&lt;/a&gt;vue 3 进入 beta 阶段&lt;/h2&gt;&lt;p&gt; 4 月 16 日，vue
+          &lt;p&gt;4 月 16 日，vue 3 正式进入 beta 阶段，终于忍不住尝鲜的心情，今天来尝试一下 Vue 3.0 的新特性。&lt;/p&gt;
+&lt;h2 id=&quot;创建-Vue-3-项目&quot;&gt;&lt;a href=&quot;#创建-Vue-3-项目&quot; class=&quot;headerlink&quot;
         
       
     
@@ -67,7 +45,7 @@
     <link href="http://yoursite.com/2020/05/24/vue3beta/"/>
     <id>http://yoursite.com/2020/05/24/vue3beta/</id>
     <published>2020-05-24T08:43:45.137Z</published>
-    <updated>2020-05-24T08:44:18.255Z</updated>
+    <updated>2020-05-24T08:56:20.025Z</updated>
     
     <summary type="html">
     
@@ -75,7 +53,7 @@
       
         
         
-          &lt;h2 id=&quot;vue-3-进入-beta-阶段&quot;&gt;&lt;a href=&quot;#vue-3-进入-beta-阶段&quot; class=&quot;headerlink&quot; title=&quot;vue 3 进入 beta 阶段&quot;&gt;&lt;/a&gt;vue 3 进入 beta 阶段&lt;/h2&gt;&lt;p&gt; 4 月 16 日，vue
+          &lt;p&gt; 4 月 16 日，vue 3 正式进入 beta 阶段。同日，尤大参加了 State of Vue 的线上活动，以下是他上传到 google docs 上的 slides ： &lt;a
         
       
     
