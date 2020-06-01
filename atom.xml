@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zhuwenyan.com/"/>
-  <updated>2020-05-24T12:53:15.182Z</updated>
+  <updated>2020-06-01T15:40:20.851Z</updated>
   <id>http://zhuwenyan.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>webpack 自定义loader</title>
+    <link href="http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/"/>
+    <id>http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/</id>
+    <published>2020-06-01T15:35:45.000Z</published>
+    <updated>2020-06-01T15:40:20.851Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;什么是loader&quot;&gt;&lt;a href=&quot;#什么是loader&quot; class=&quot;headerlink&quot; title=&quot;什么是loader&quot;&gt;&lt;/a&gt;什么是loader&lt;/h2&gt;&lt;p&gt;由于webpack 只能解析 JavaScript 和 JSON 文件，当引入非
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="webpack" scheme="http://zhuwenyan.com/tags/webpack/"/>
+    
+  </entry>
   
   <entry>
     <title>Vue 3 尝鲜</title>

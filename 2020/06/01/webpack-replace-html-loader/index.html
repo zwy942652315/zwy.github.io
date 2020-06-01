@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>webpack 自定义loader | wenyan&#39;s blog | Never give up yourself, nothing is imposible</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#2ca6cb">
+    
+    
+    <meta name="keywords" content="webpack">
+    <meta name="description" content="什么是loader由于webpack 只能解析 JavaScript 和 JSON 文件，当引入非 JavaScript 文件时，要使用 Webpack的loader机制， loader让 webpack 能够去处理其他类型的文件，并将它们转换为有效模块，以供应用程序使用，以及被添加到依赖图中。 loader 模块需要导出一个函数。 这个导出的函数的工作就是获得处理前的原内容，对原内容执行处理后，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack 自定义loader">
+<meta property="og:url" content="http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/index.html">
+<meta property="og:site_name" content="wenyan&#39;s blog">
+<meta property="og:description" content="什么是loader由于webpack 只能解析 JavaScript 和 JSON 文件，当引入非 JavaScript 文件时，要使用 Webpack的loader机制， loader让 webpack 能够去处理其他类型的文件，并将它们转换为有效模块，以供应用程序使用，以及被添加到依赖图中。 loader 模块需要导出一个函数。 这个导出的函数的工作就是获得处理前的原内容，对原内容执行处理后，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2020/6/1/172707ce2cd2fee8?w=1510&h=575&f=png&s=39647">
+<meta property="article:published_time" content="2020-06-01T15:35:45.000Z">
+<meta property="article:modified_time" content="2020-06-01T15:40:20.851Z">
+<meta property="article:author" content="wenyan">
+<meta property="article:tag" content="webpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2020/6/1/172707ce2cd2fee8?w=1510&h=575&f=png&s=39647">
+    
+        <link rel="alternate" type="application/atom+xml" title="wenyan&#39;s blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">wenyan</h5>
+          <a href="mailto:18319981182@163.com" title="18319981182@163.com" class="mail">18319981182@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zwy942652315" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">webpack 自定义loader</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">webpack 自定义loader</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-06-01T15:35:45.000Z" itemprop="datePublished" class="page-time">
+  2020-06-01
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是loader"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是loader</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#loader基础"><span class="post-toc-number">2.</span> <span class="post-toc-text">loader基础</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#loader配置"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">loader配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#获取loader的options"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">获取loader的options</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#返回结果"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">返回结果</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#this-cacheable"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">this.cacheable</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#this-async"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">this.async</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#编写自定义loader"><span class="post-toc-number">3.</span> <span class="post-toc-text">编写自定义loader</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用本地loader"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">使用本地loader</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#发布到npm"><span class="post-toc-number">4.</span> <span class="post-toc-text">发布到npm</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建-npm-包模块"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">创建 npm 包模块</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#注册npm账号"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">注册npm账号</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#登录-npm"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">登录 npm</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#发布"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">发布</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在项目中使用npm的loader"><span class="post-toc-number">5.</span> <span class="post-toc-text">在项目中使用npm的loader</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最后"><span class="post-toc-number">6.</span> <span class="post-toc-text">最后</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-webpack-replace-html-loader"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">webpack 自定义loader</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-06-01 23:35:45" datetime="2020-06-01T15:35:45.000Z"  itemprop="datePublished">2020-06-01</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="什么是loader"><a href="#什么是loader" class="headerlink" title="什么是loader"></a>什么是loader</h2><p>由于webpack 只能解析 JavaScript 和 JSON 文件，当引入非 JavaScript 文件时，要使用 Webpack的loader机制， loader让 webpack 能够去处理其他类型的文件，并将它们转换为有效模块，以供应用程序使用，以及被添加到依赖图中。</p>
+<p>loader 模块需要导出一个函数。 这个导出的函数的工作就是获得处理前的原内容，对原内容执行处理后，返回处理后的内容。</p>
+<h2 id="loader基础"><a href="#loader基础" class="headerlink" title="loader基础"></a>loader基础</h2><h3 id="loader配置"><a href="#loader配置" class="headerlink" title="loader配置"></a>loader配置</h3><p>Webpack配置里的 <code>module.rules</code> 数组配置了一组规则，告诉 webpack在遇到哪些文件时使用哪些 Loader 去加载和转换。</p>
+<p>如 webpack里的配置文件webpack.config.js</p>
+<pre class=" language-js"><code class="language-js">module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span>
+        test<span class="token punctuation">:</span> <span class="token regex">/\.js$/</span><span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">// 把 ES6 转换成 ES5</span>
+        use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'babel-loader'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        exclude<span class="token punctuation">:</span> <span class="token regex">/node_modules/</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">// postcss-loader：扩展 CSS 语法，使用下一代 CSS，在3-5使用 PostCSS中有介绍。</span>
+        <span class="token comment" spellcheck="true">// css-loader：加载 CSS，支持模块化、压缩、文件导入等特性。</span>
+        <span class="token comment" spellcheck="true">// style-loader：把 CSS 代码注入到 JavaScript 中，通过 DOM 操作去加载 CSS。</span>
+        use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'style-loader'</span><span class="token punctuation">,</span> <span class="token string">'css-loader'</span><span class="token punctuation">,</span> <span class="token string">'postcss-loader'</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        test<span class="token punctuation">:</span> <span class="token regex">/\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/</span><span class="token punctuation">,</span>
+        use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+          <span class="token comment" spellcheck="true">// url-loader：能在文件很小的情况下以 base64 的方式把文件内容注入到代码中去</span>
+          loader<span class="token punctuation">:</span> <span class="token string">'url-loader'</span><span class="token punctuation">,</span>
+          options<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            limit<span class="token punctuation">:</span> <span class="token number">10000</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span></code></pre>
+<p>加载es6、样式、图片文件，都有其对应的loader</p>
+<p>rules的选项配置方式如下：</p>
+<ol>
+<li><code>test</code> 属性，用于标识出应该被对应的 loader 进行转换的某个或某些文件。</li>
+<li><code>use</code> 属性，表示进行转换时，应该使用哪个 loader，可以指定一个或多个loader，当多个loader时，其执行顺序是从右到左。</li>
+</ol>
+<h3 id="获取loader的options"><a href="#获取loader的options" class="headerlink" title="获取loader的options"></a>获取loader的options</h3><p>当使用loader时，Webpack是如何获取到用户传入的options</p>
+<p>使用 loader-utils 中提供的 getOptions 方法 来提取给定 loader 的 option。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">const</span> loaderUtils <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'loader-utils'</span><span class="token punctuation">)</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>source<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 获取到用户给当前 Loader 传入的 options</span>
+  <span class="token keyword">const</span> options <span class="token operator">=</span> loaderUtils<span class="token punctuation">.</span><span class="token function">getOptions</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span>
+  <span class="token keyword">return</span> source
+<span class="token punctuation">}</span></code></pre>
+<p>获取到options就是webpack配置 <code>module.rules</code> 里的options属性</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">{</span>
+  test<span class="token punctuation">:</span> <span class="token regex">/\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/</span><span class="token punctuation">,</span>
+  use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// url-loader：能在文件很小的情况下以 base64 的方式把文件内容注入到代码中去</span>
+    loader<span class="token punctuation">:</span> <span class="token string">'url-loader'</span><span class="token punctuation">,</span>
+    options<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      limit<span class="token punctuation">:</span> <span class="token number">10000</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h3><pre><code>module.exports = function(source, map, meta) {
+  // 获取到用户给当前 Loader 传入的 options
+  const options = loaderUtils.getOptions(this)
+  return source
+}</code></pre><p><code>source</code>，上一个 loader 产生的结果或者资源文件</p>
+<p><code>map</code> 和 <code>meta</code> 参数是可选的</p>
+<p>map，传递一个可选的 SourceMap 结果</p>
+<h3 id="this-cacheable"><a href="#this-cacheable" class="headerlink" title="this.cacheable"></a>this.cacheable</h3><p>设置是否可缓存标志的函数：</p>
+<pre class=" language-typescript"><code class="language-typescript"><span class="token function">cacheable</span><span class="token punctuation">(</span>flag <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">:</span> <span class="token keyword">boolean</span><span class="token punctuation">)</span></code></pre>
+<p>默认情况下，loader 的处理结果会被标记为可缓存。调用这个方法然后传入 <code>false</code>，可以关闭 loader 的缓存。</p>
+<p>一个可缓存的 loader 在输入和相关依赖没有变化时，必须返回相同的结果。这意味着 loader 除了 <code>this.addDependency</code> 里指定的以外，不应该有其它任何外部依赖。</p>
+<h3 id="this-async"><a href="#this-async" class="headerlink" title="this.async"></a>this.async</h3><p>loader 将会异步地回调。返回 <code>this.callback</code>。</p>
+<p>loader 有同步和异步之分，同步会从头到尾执行，但是一些操作如果是同步，就会阻塞构建进程，如读取本地文件，网络请求，所以可以采取异步操作。</p>
+<h2 id="编写自定义loader"><a href="#编写自定义loader" class="headerlink" title="编写自定义loader"></a>编写自定义loader</h2><p>下面编写一个自定义loader <code>replace-html-loader</code>，该loader的作用是，解析引入的html模板。</p>
+<pre class=" language-vue"><code class="language-vue">@include(../templates/list.html)</code></pre>
+<p>转换成 <code>list.html</code> 里面的内容</p>
+<p>该loader的使用场景是，在多个文件中，当使用同一段html代码时，可以通过引入模板路径，来渲染模板</p>
+<p>replace-html-loader.js</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> loaderUtils <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'loader-utils'</span><span class="token punctuation">)</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>source<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 关闭该 Loader 的缓存功能</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">cacheable</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// 获取到用户给当前 Loader 传入的 options</span>
+  <span class="token keyword">const</span> options <span class="token operator">=</span> loaderUtils<span class="token punctuation">.</span><span class="token function">getOptions</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> key <span class="token punctuation">}</span> <span class="token operator">=</span> options
+  <span class="token keyword">const</span> reg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">RegExp</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`(@</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>key<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">\\()(.*?)\\)`</span></span><span class="token punctuation">)</span>
+  <span class="token keyword">const</span> regResult <span class="token operator">=</span> reg<span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span>source<span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// 告诉 webpack本次转换是异步的，Loader 会在 callback 中回调结果</span>
+  <span class="token keyword">var</span> callback <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token keyword">async</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>regResult<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> request <span class="token operator">=</span> loaderUtils<span class="token punctuation">.</span><span class="token function">urlToRequest</span><span class="token punctuation">(</span>regResult<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// 像 require 语句一样获得指定文件的完整路径</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">'/src'</span><span class="token punctuation">,</span> request<span class="token punctuation">,</span> <span class="token punctuation">(</span>err<span class="token punctuation">,</span> rs<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        rs <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>resourcePath<span class="token punctuation">,</span> <span class="token string">'../'</span><span class="token punctuation">,</span> request<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> layoutHtml <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>rs<span class="token punctuation">,</span> <span class="token string">'utf-8'</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> error
+      <span class="token punctuation">}</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">addDependency</span><span class="token punctuation">(</span>rs<span class="token punctuation">)</span>
+      <span class="token comment" spellcheck="true">// 用读取的文件内容 替换 @include(../templates/list.html)</span>
+      res <span class="token operator">=</span> source<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>regResult<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> layoutHtml<span class="token punctuation">)</span>
+      <span class="token function">callback</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> res<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>  <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token function">callback</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> source<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="使用本地loader"><a href="#使用本地loader" class="headerlink" title="使用本地loader"></a>使用本地loader</h3><p>webpack的config增加loader配置：</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">{</span>
+  test<span class="token punctuation">:</span> <span class="token regex">/\.vue$/</span><span class="token punctuation">,</span>
+  use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'vue-loader'</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 因为该loader还没有上传的npm，所以要指定该loader的路径，才能使用</span>
+      loader<span class="token punctuation">:</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">'./replace-html-loader.js'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      options<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        key<span class="token punctuation">:</span> <span class="token string">'include'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
+<p>因为是在 Vue 的项目中使用这个loader的，所以写在Vue 的 <code>vue-loader</code> 后面</p>
+<p>然后在Vue 组件中使用</p>
+<pre class=" language-vue"><code class="language-vue"><template>
+  <div id="user-list">
+    <div>@include(../templates/list.html)</div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'user-list',
+  data() {
+    return {
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }]
+    }
+  },
+  methods: {
+
+  }
+}
+</script>
+
+<style>
+</style></code></pre>
+<p>list.html里面的内容可以使用当前Vue组件中的变量</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-table</span>
+  <span class="token attr-name">:data</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>tableData<span class="token punctuation">"</span></span><span class="token style-attr language-css"><span class="token attr-name">
+  <span class="token attr-name">style</span></span><span class="token punctuation">="</span><span class="token attr-value"><span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">100%</span></span><span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-table-column</span>
+    <span class="token attr-name">prop</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>date<span class="token punctuation">"</span></span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>日期<span class="token punctuation">"</span></span>
+    <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>180<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-table-column</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-table-column</span>
+    <span class="token attr-name">prop</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>姓名<span class="token punctuation">"</span></span>
+    <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>180<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-table-column</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>el-table-column</span>
+    <span class="token attr-name">prop</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>address<span class="token punctuation">"</span></span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>地址<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-table-column</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>el-table</span><span class="token punctuation">></span></span></code></pre>
+<p>效果图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://user-gold-cdn.xitu.io/2020/6/1/172707ce2cd2fee8?w=1510&h=575&f=png&s=39647" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="发布到npm"><a href="#发布到npm" class="headerlink" title="发布到npm"></a>发布到npm</h2><h3 id="创建-npm-包模块"><a href="#创建-npm-包模块" class="headerlink" title="创建 npm 包模块"></a>创建 npm 包模块</h3><p>创建npm包目录</p>
+<pre class=" language-shell"><code class="language-shell">mkdir replace-html-loader</code></pre>
+<p>初始化loader</p>
+<pre class=" language-shell"><code class="language-shell">npm init</code></pre>
+<p>该命令会一步一步提示输入该loader的信息，最后会生成一个 package.json 文件</p>
+<p>完整如下：</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"replace-html-loader"</span><span class="token punctuation">,</span>
+  <span class="token property">"version"</span><span class="token operator">:</span> <span class="token string">"1.0.5"</span><span class="token punctuation">,</span>
+  <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"A defined webpack loader, replace html template"</span><span class="token punctuation">,</span>
+  <span class="token property">"main"</span><span class="token operator">:</span> <span class="token string">"index.js"</span><span class="token punctuation">,</span>
+  <span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"test"</span><span class="token operator">:</span> <span class="token string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"devDependencies"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"loader-utils"</span><span class="token operator">:</span> <span class="token string">"^2.0.0"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"keywords"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">"webpack"</span><span class="token punctuation">,</span>
+    <span class="token string">"loader"</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"author"</span><span class="token operator">:</span> <span class="token string">"wenyan"</span><span class="token punctuation">,</span>
+  <span class="token property">"license"</span><span class="token operator">:</span> <span class="token string">"ISC"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>其中，由 main 属性可以看出，入口文件为 index.js，把之前 replace-html-loader.js 的内容赋值到该文件</p>
+<p>至此，该loader 的npm 包已经完成，开始正式发布到npm</p>
+<h3 id="注册npm账号"><a href="#注册npm账号" class="headerlink" title="注册npm账号"></a>注册npm账号</h3><p>去 npm 官网 <a href="https://www.npmjs.com/" target="_blank" rel="noopener">https://www.npmjs.com/</a> ，注册一个账号，要进行邮箱验证</p>
+<p>注册完成后，就可以添加npm账号了</p>
+<pre class=" language-shell"><code class="language-shell">npm adduser</code></pre>
+<h3 id="登录-npm"><a href="#登录-npm" class="headerlink" title="登录 npm"></a>登录 <a href="https://www.npmjs.com/" target="_blank" rel="noopener">npm</a></h3><pre class=" language-shell"><code class="language-shell">npm login</code></pre>
+<h3 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h3><pre><code>npm publish</code></pre><p>注意：如果是多次修改npm包，发布时要修改package.json的 version 版本号</p>
+<h2 id="在项目中使用npm的loader"><a href="#在项目中使用npm的loader" class="headerlink" title="在项目中使用npm的loader"></a>在项目中使用npm的loader</h2><p>在项目根目录执行</p>
+<pre class=" language-shell"><code class="language-shell">npm i replace-html-loader</code></pre>
+<p>webpack.config.js</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">{</span>
+  test<span class="token punctuation">:</span> <span class="token regex">/\.vue$/</span><span class="token punctuation">,</span>
+  use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'vue-loader'</span><span class="token punctuation">,</span> 
+    <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 因为该loader还没有上传的npm，所以要指定该loader的路径，才能使用</span>
+      <span class="token comment" spellcheck="true">// loader: path.resolve(__dirname, './replace-html-loader.js'),</span>
+      loader<span class="token punctuation">:</span> <span class="token string">'replace-html-loader'</span><span class="token punctuation">,</span>
+      options<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        key<span class="token punctuation">:</span> <span class="token string">'include'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
+<p>现在已经不需要指定该loader的路径，就能和其他loader一样直接使用了</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>编写一个loader其实很简单，如果是功能比较复杂，可能就会有点棘手。但总的来说，如果在实际的项目中，遇到问题，无法找到合适的解决方案，就只能自己动手，丰衣足食。认识了loader之后，你解决问题的能力，那就不仅仅停留在框架本身了，还可以通过构建工具来解决一些问题。</p>
+<p><a href="https://github.com/zwy942652315/webpack-replace-html-loader" target="_blank" rel="noopener">项目地址</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-06-01T15:40:20.851Z" itemprop="dateUpdated">2020-06-01 23:40:20</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2020/06/01/webpack-replace-html-loader/" target="_blank" rel="external">http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://zhuwenyan.com">
+            <img src="/img/avatar.jpg" alt="wenyan">
+            wenyan
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/&title=《webpack 自定义loader》 — wenyan's blog&pic=http://zhuwenyan.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/&title=《webpack 自定义loader》 — wenyan's blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《webpack 自定义loader》 — wenyan's blog&url=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/&via=http://zhuwenyan.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/05/24/vue3start/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Vue 3 尝鲜</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "",
+            appKey: "",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <!-- <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div> -->
+    <div class="bottom">
+        <p><span>wenyan &copy; 2019 - 2020</span>
+            <!-- <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span> -->
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/&title=《webpack 自定义loader》 — wenyan's blog&pic=http://zhuwenyan.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/&title=《webpack 自定义loader》 — wenyan's blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《webpack 自定义loader》 — wenyan's blog&url=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/&via=http://zhuwenyan.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://zhuwenyan.com/2020/06/01/webpack-replace-html-loader/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'wenyan'blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'wenyan'blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
